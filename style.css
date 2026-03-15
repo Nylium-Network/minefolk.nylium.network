@@ -21,12 +21,6 @@ header {
     h1 {
         font-size: 300%;
     }
-    img {
-        float: left;
-        height: 2em;
-        width: auto;
-        font-size: 500%;
-    }
 }
 nav {
     background-color: saddlebrown;
