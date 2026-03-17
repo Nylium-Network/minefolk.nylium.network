@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Works - Nylium Network</title>
+    <title>Works (Minefolk) - Nylium Network</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Voxel(s)">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Works - Nylium Network" />
+    <meta property="og:title" content="Works (Minefolk) - Nylium Network" />
     <meta property="og:description" content="A list of the works catalogued here" />
-    <meta property="og:url" content="https://nylium.network/works" />
-    <meta property="og:image" content="https://nylium.network/image/nylium-block.svg" />
+    <meta property="og:url" content="https://minefolk.nylium.network/works" />
+    <meta property="og:image" content="https://minefolk.nylium.network/image/nylium-block.svg" />
     
     <link rel="stylesheet" type="text/css" href="/style.css">
     <link rel="stylesheet" type="text/css" href="/font/otf_Minecraft.css">
@@ -18,8 +18,8 @@
 </head>
 <body>
     <header>
-        <h1>nylium<img title="Nylium Cube" class="intext-image" src="/image/nylium-block_symbols.svg" alt="A cube with three visible faces. The top face is dark red with a light teal alt key symbol. The viewer's left face is red with a dark teal inkpot from the fictionkin symbol. The viewer's right face is teal with a red quill from the fictionkin symbol.">network</h1>
-        <h2>A list of the works catalogued here</h2>
+        <a href="https://www.nylium.network"><img title="Nylium Network Home" src="image/nylium-block.svg" alt="An oblique cube. Its top face is dark red, its left face is bright red, and its right face is teal. Its edges are gray."></a>
+        <h1>Works Library</h1>
     </header>
     <nav>
         <ul>
@@ -42,7 +42,8 @@
         </div>
     </main>
     <footer>
-        <p>Not affiliated with or endorsed by Mojang or Microsoft, yada yada. You know the deal!</p>
+        <p>Site by <a href="https://voxel.gay">Voxel(s)</a>.</p>
+        <p>We are neither affiliated with, nor endorsed by, Microsoft or Mojang.</p>
     </footer>
 </body>
 </html>
