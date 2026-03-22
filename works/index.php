@@ -35,9 +35,11 @@
         <p>Also check out our <a href="https://nyliumnetwork.tumblr.com/">tumblr blog</a>!</p>
         <div class="works-list">
         <?php
-            error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+            /*error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
             require "items_array.php";
-            echo new Items_array(json_decode(file_get_contents("library.json"), true));
+            echo new Items_array(json_decode(file_get_contents("library.json"), true));*/
+            require "scripts/sync_library.php";
+            sync_library(prefix: "groups/6093877", cache_path: "cache");
         ?>
         </div>
     </main>
