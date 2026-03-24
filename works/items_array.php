@@ -10,11 +10,11 @@
             $this->attachments = array();
             foreach ($input_items as $i) {
                 if ($i['data']['itemType'] == "attachment")
-                    $this->attachments[] = new Item(key: $i["data"]['key'], itemType: $i['data']['itemType'], children: $this->attachments, title: $i['data']['title'], url: $i['data']['url'], parentItem: $i['data']['parentItem'], tags: $i['data']['tags'], date: $i['data']['date'], shortTitle: $i['data']['shortTitle'], creators: $i['data']['creators'], abstractNote: $i['data']['abstractNote'], blogTitle: $i['data']['blogTitle'], websiteTitle: $i['data']['websiteTitle'], forumTitle: $i['data']['forumTitle'], series: $i['data']['series'], seriesNumber: $i['data']['seriesNumber']);
+                    $this->attachments[] = new ItemOld(key: $i["data"]['key'], itemType: $i['data']['itemType'], children: $this->attachments, title: $i['data']['title'], url: $i['data']['url'], parentItem: $i['data']['parentItem'], tags: $i['data']['tags'], date: $i['data']['date'], shortTitle: $i['data']['shortTitle'], creators: $i['data']['creators'], abstractNote: $i['data']['abstractNote'], blogTitle: $i['data']['blogTitle'], websiteTitle: $i['data']['websiteTitle'], forumTitle: $i['data']['forumTitle'], series: $i['data']['series'], seriesNumber: $i['data']['seriesNumber']);
             }
             foreach ($input_items as $i) {
                 if ($i['data']['itemType'] != "attachment")
-                    $this->items[] = new Item(key: $i["data"]['key'], itemType: $i['data']['itemType'], children: $this->attachments, title: $i['data']['title'], url: $i['data']['url'], parentItem: $i['data']['parentItem'], tags: $i['data']['tags'], date: $i['data']['date'], shortTitle: $i['data']['shortTitle'], creators: $i['data']['creators'], abstractNote: $i['data']['abstractNote'], blogTitle: $i['data']['blogTitle'], websiteTitle: $i['data']['websiteTitle'], forumTitle: $i['data']['forumTitle'], series: $i['data']['series'], seriesNumber: $i['data']['seriesNumber']);
+                    $this->items[] = new ItemOld(key: $i["data"]['key'], itemType: $i['data']['itemType'], children: $this->attachments, title: $i['data']['title'], url: $i['data']['url'], parentItem: $i['data']['parentItem'], tags: $i['data']['tags'], date: $i['data']['date'], shortTitle: $i['data']['shortTitle'], creators: $i['data']['creators'], abstractNote: $i['data']['abstractNote'], blogTitle: $i['data']['blogTitle'], websiteTitle: $i['data']['websiteTitle'], forumTitle: $i['data']['forumTitle'], series: $i['data']['series'], seriesNumber: $i['data']['seriesNumber']);
             }
         }
 

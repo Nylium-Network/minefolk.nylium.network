@@ -1,8 +1,9 @@
 <?php
+    require "class/item.php";
+    require "class/item/attachment.php";
     function sync_library(string $prefix, string $cache_path, /* bool $bypass_timer = false */) {
         //check for cache directories and create if nonexistent
-        if (!(file_exists($cache_path) and is_dir($cache_path))) mkdir($cache_path);
-        if (!(file_exists("$cache_path/items") and is_dir("$cache_path/items"))) mkdir("$cache_path/items");
+        if (!file_exists($cache_path)) mkdir($cache_path);
 
         $metadata = array (
             "version" => 0, //latest item version in the cache
@@ -16,14 +17,14 @@
             //update last sync time to now
             $metadata["last_sync"] = time();
 
-            $library_url = "https://api.zotero.org/$prefix/items"; //base URL for remote library
+            $library_url = "https://api.zotero.org/$prefix/items?v=3"; //base URL for remote library
         
             //initialize and set options for curl process
             $ch = curl_init();
             curl_setopt_array(
                 $ch, 
                 array(
-                    CURLOPT_URL => "$library_url?since={$metadata["version"]}&format=versions&includeTrashed=1", //downloads list of items in library along with versions
+                    CURLOPT_URL => "$library_url&since={$metadata["version"]}&format=versions&includeTrashed=1", //downloads list of items in library along with versions
                     CURLOPT_HEADER => true, //use response header as well
                     CURLOPT_RETURNTRANSFER => true //download as string
                 )
@@ -73,14 +74,55 @@
                     curl_setopt_array(
                         $ch, 
                         array(
-                            CURLOPT_URL => "$library_url?itemKey=$queued_items&includeTrashed=1",
+                            CURLOPT_URL => "$library_url&itemKey=$queued_items&includeTrashed=1",
                             CURLOPT_HEADER => false,
                         )
                     );
-                    $new_items = json_decode(curl_exec($ch), true); //download items in queue and convert to array
-                    foreach ($new_items as $num => $item) { //for each newly downloaded item
-                        $new_item = json_encode($item); //extract as json
-                        file_put_contents("$cache_path/items/{$item["key"]}.json", $new_item); //write to file
+                    $item_response = json_decode(curl_exec($ch), true); //download items in queue and convert to array
+                    $new_items = array();
+                    foreach ($item_response as $item) { //for each newly downloaded item
+                        //if item is note, create new note
+                        if ($item["data"]["itemType"] == "note") $new_item = new Note(key: $item["key"], cache_path: $cache_path, version: $item["version"], note: $item["data"]["note"], parent_item: $item["data"]["parentItem"]);
+
+                        else if ($item["data"]["itemType"] == "attachment") { //if item is an attachment
+                            switch ($item["data"]["linkMode"]) { //check the link mode
+                                case "linked_url": //if it's a url
+                                    $url = $item["data"]["url"]; //write it directly
+                                    break;
+                                case "imported_file": //if it's a file
+                                    $url = "{$item["links"]["alternate"]["href"]}/reader"; //use the file link
+                                    break;
+                                default:
+                                    $url = "";
+                            }
+                            //create a new attachment
+                            $new_item = new Attachment(key: $item["key"], cache_path: $cache_path, url: $url, parent_item: $item["data"]["parentItem"]);
+                        }
+                        else { //otherwise
+                            switch ($item["data"]["itemType"]) { //set $member_of to the item's type's equivalent
+                                case "blogPost":
+                                    $member_of = $item["data"]["blogTitle"];
+                                    break;
+                                case "forumPost":
+                                    $member_of = $item["data"]["forumTitle"];
+                                    break;
+                                case "webpage":
+                                    $member_of = $item["data"]["websiteTitle"];
+                                    break;
+                                case "book":
+                                    $member_of = $item["data"]["series"];
+                                    break;
+                                default:
+                                    $member_of = "";
+                            }
+                            //create a new item
+                            $new_item = new Item(key: $item["key"], type: $item["data"]["itemType"], version: $item["version"], cache_path: $cache_path, title: $item["data"]["title"], creators: $item["meta"]["creatorSummary"], date: $item["meta"]["parsedDate"], url: $item["data"]["url"], abstract: $item["data"]["abstractNote"], member_of: $member_of, tags: $item["data"]["tags"]);
+                        }
+                        $new_items[] = $new_item; //add item to array
+                    }
+                    //write items in array to file
+                    foreach ($new_items as $item) { 
+                        $item->Store($cache_path);
                     }
                 }
             }
