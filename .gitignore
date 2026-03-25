@@ -1,2 +1,5 @@
 .vscode/*
-works/cache/*
+works/cache/metadata.json
+works/cache/items/*.json
+works/cache/items/attachments/*.json
+works/cache/items/notes/*.json
