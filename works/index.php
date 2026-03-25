@@ -34,7 +34,7 @@
         <p>Coming soon: searching and better sorting! For now, you can use <code>Ctrl+F</code> or your browser's &ldquo;find&rdquo; feature to search for keywords.</p>
         <p>Also check out our <a href="https://nyliumnetwork.tumblr.com/">tumblr blog</a>!</p>
         <?php
-            require "scripts/sync_library.php";
+           require "scripts/sync_library.php";
             sync_library(prefix: "groups/6093877", cache_path: "cache");
 
             $items = array();

@@ -14,7 +14,7 @@
         else $metadata = json_decode(file_get_contents("$cache_path/metadata.json"), true); //otherwise, set metadata
 
         //if it has been at least 24 hours since the last sync...
-        /* if ( $bypass_timer or ((time() - $metadata["last_sync"]) >= 86400) ) { */
+        if (time() - $metadata["last_sync"] >= 86400) {
             //update last sync time to now
             $metadata["last_sync"] = time();
 
@@ -37,7 +37,8 @@
             //convert headers to array
             $item_list_headers_simple = explode(PHP_EOL, $item_list_response[0]); //separate headers into 
             $item_list_headers = array ();
-            foreach ($item_list_headers_simple as $num => $header) {
+            foreach ($item_list_headers_simple as $header) {
+                if (!preg_match("/\S?: \S?/", $header)) continue;
                 list($key, $value) = explode(': ', $header);
                 $item_list_headers[$key] = $value;
             }
@@ -85,12 +86,12 @@
                     foreach ($item_response as $item) { //for each newly downloaded item
                         //if item is note, create new note
                         if ($item["data"]["itemType"] == "note") {
-                            if ($item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/notes/{$item["key"]}.json", "");
-                            else $new_item = new Note(key: $item["key"], cache_path: $cache_path, version: $item["version"], note: $item["data"]["note"], parent_item: $item["data"]["parentItem"]);
+                            if (array_key_exists("deleted", $item["data"]) and $item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/notes/{$item["key"]}.json", "");
+                            else if (array_key_exists("parentItem", $item["data"])) $new_item = new Note(key: $item["key"], cache_path: $cache_path, version: $item["version"], note: $item["data"]["note"], parent_item: $item["data"]["parentItem"]);
                         }
 
                         else if ($item["data"]["itemType"] == "attachment") { //if item is an attachment
-                            if ($item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/attachments/{$item["key"]}.json", "");
+                            if (array_key_exists("deleted", $item["data"]) and $item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/attachments/{$item["key"]}.json", "");
                             else {
                                 switch ($item["data"]["linkMode"]) { //check the link mode
                                     case "linked_url": //if it's a url
@@ -107,7 +108,7 @@
                             }
                         }
                         else { //otherwise
-                            if ($item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/notes/{$item["key"]}.json", "");
+                            if (array_key_exists("deleted", $item["data"]) and $item["data"]["deleted"] == 1) file_put_contents("$cache_path/items/notes/{$item["key"]}.json", "");
                             else {
                                 switch ($item["data"]["itemType"]) { //set $member_of to the item's type's equivalent
                                     case "blogPost":
@@ -126,7 +127,9 @@
                                         $member_of = "";
                                 }
                                 //create a new item
-                                $new_item = new Item(key: $item["key"], type: $item["data"]["itemType"], version: $item["version"], cache_path: $cache_path, title: $item["data"]["title"], creators: $item["meta"]["creatorSummary"], date: $item["meta"]["parsedDate"], url: $item["data"]["url"], abstract: $item["data"]["abstractNote"], member_of: $member_of, tags: $item["data"]["tags"]);
+                                if (array_key_exists("parsedDate", $item["meta"])) $date = $item["meta"]["parsedDate"]; else $date = "";
+                                if (array_key_exists("creatorSummary", $item["meta"])) $creators = $item["meta"]["creatorSummary"]; else $creators = "";
+                                $new_item = new Item(key: $item["key"], type: $item["data"]["itemType"], version: $item["version"], cache_path: $cache_path, title: $item["data"]["title"], creators: $creators, date: $date, url: $item["data"]["url"], abstract: $item["data"]["abstractNote"], member_of: $member_of, tags: $item["data"]["tags"]);
                             }
                         }
                         $new_items[] = $new_item; //add item to array
@@ -147,7 +150,7 @@
 
             //update metadata file
             file_put_contents("$cache_path/metadata.json", json_encode($metadata));
-        /* }
-        else echo "library updates once per 24hr!"; */
+        }
+        //else echo "library updates once per 24hr!"; */
     }
 ?>

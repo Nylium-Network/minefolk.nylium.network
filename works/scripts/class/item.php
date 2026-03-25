@@ -168,7 +168,7 @@ class Item implements Stringable {
     }
 
     public function store(?string $cache_path) {
-        if (empty($this->key)) return;
+        if (empty($this->key) or !preg_match("/[a-zA-Z-0-9]/", $this->key)) return;
 
         if (empty($cache_path)) {
             if (empty($this->cache_path)) return;

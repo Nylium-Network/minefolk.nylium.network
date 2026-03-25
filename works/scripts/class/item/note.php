@@ -15,7 +15,7 @@ class Note extends Item {
         if (!empty($cache_path) and file_exists("$cache_path/items/notes/$key.json")) {
             $item_array = json_decode(file_get_contents("$cache_path/items/notes/$key.json"), true);
 
-            if ($item_array["version"] != null) $this->version = $item_array["version"];
+            if ($item_array != null and array_key_exists("version", $item_array) and $item_array["version"] != null) $this->version = $item_array["version"];
             else $this->version = 0;
             if (!empty($item_array["parent_item"])) $this->parent_item = $item_array["parent_item"];
             else $this->parent_item = "";
@@ -33,7 +33,7 @@ class Note extends Item {
     }
 
     public function store(?string $cache_path) {
-        if (empty($this->key) or empty($this->parent_item)) return;
+        if (empty($this->key) or empty($this->parent_item) or !preg_match("/[a-zA-Z-0-9]/", $this->key)) return;
 
         if (empty($cache_path)) {
             if (empty($this->cache_path)) return;

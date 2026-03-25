@@ -34,7 +34,7 @@ class Attachment extends Item {
     }
 
     public function store(?string $cache_path) {
-        if (empty($this->key) or empty($this->parent_item)) return;
+        if (empty($this->key) or empty($this->parent_item) or !preg_match("/[a-zA-Z-0-9]/", $this->key)) return;
 
         if (empty($cache_path)) {
             if (empty($this->cache_path)) return;
