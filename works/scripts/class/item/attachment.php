@@ -16,7 +16,7 @@ class Attachment extends Item {
         if (!empty($cache_path) and file_exists("$cache_path/items/attachments/$key.json")) {
             $item_array = json_decode(file_get_contents("$cache_path/items/attachments/$key.json"), true);
 
-            if (array_key_exists("version", $item_array) and $item_array["version"] != null) $this->url = $item_array["version"];
+            if ($item_array != null and array_key_exists("version", $item_array) and $item_array["version"] != null) $this->url = $item_array["version"];
             if (!empty($item_array["title"])) $this->title = $item_array["title"];
             if (!empty($item_array["url"])) $this->url = $item_array["url"];
             if (!empty($item_array["parent_item"])) $this->parent_item = $item_array["parent_item"];

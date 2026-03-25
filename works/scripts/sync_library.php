@@ -55,12 +55,12 @@
                 //items that either do not exist in the cache yet, or are older in the cache than their remotes, should be downloaded
                 $items_to_download = array(); //initialize array
                 foreach ($item_list as $key => $version) { //for each item in the list
-                    if (!(file_exists("$cache_path/items/$key.json") or file_exists("$cache_path/items/attachments/$key.json") or file_exists("$cache_path/items/notes/$key.json"))) $items_to_download[] = $key; //if it's not cached at all, mark it for download
-                    else { //if it *is* cached
-                        $stored_item = json_decode(file_get_contents("$cache_path/items/$key.json")); //check the cached item's version
-                        if (count($stored_item) > 0 and $version > $stored_item["version"]) $items_to_download[] = $key; //if item contains values and is older than the remote item's version, mark it for download
-                        //(if it's empty, assume it's deleted and ignore)
-                    }
+                    $stored_item = null;
+                    if (file_exists("$cache_path/items/$key.json")) $stored_item = json_decode(file_get_contents("$cache_path/items/$key.json"), true);
+                    else if (file_exists("$cache_path/items/attachments/$key.json")) $stored_item = json_decode(file_get_contents("$cache_path/items/attachments/$key.json"), true);
+                    else if (file_exists("$cache_path/items/notes/$key.json")) $stored_item = json_decode(file_get_contents("$cache_path/items/notes/$key.json"), true);
+                    if ($stored_item != null and count($stored_item) > 0 and $version > $stored_item["version"]) $items_to_download[] = $key;
+                    else $items_to_download[] = $key;
                 }
 
                 //download items, max 50 at a time, and write to files
