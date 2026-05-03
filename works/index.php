@@ -23,7 +23,8 @@
     </header>
     <nav>
         <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="https://nylium.network">Site Home</a>
+            <li><a href="/">Minefolk Home</a></li>
             <li><a href="#">Works</a></li>
             <li><a href="https://map.nylium.network">SMP Map</a></li>
             <li><a href="/about">About</a></li>
