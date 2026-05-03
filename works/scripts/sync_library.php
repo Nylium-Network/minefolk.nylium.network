@@ -148,7 +148,7 @@ function sync_library(string $prefix, string $cache_path, /* bool $bypass_timer 
                             $new_item = new Item(key: $item["key"], type: $item["data"]["itemType"], version: $item["version"], cache_path: $cache_path, title: $item["data"]["title"], creators: $creators, date: $date, url: $item["data"]["url"], abstract: $item["data"]["abstractNote"], member_of: $member_of, tags: $item["data"]["tags"]);
                         }
                     }
-                    $new_items[] = $new_item; //add item to array
+                    if (isset($new_item)) $new_items[] = $new_item; //add item to array
                 }
                 //write items in array to file
                 foreach ($new_items as $item) { 
